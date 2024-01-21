@@ -1,0 +1,67 @@
+{"properties": [
+  {
+    "name": "application.name",
+    "type": "java.lang.String",
+    "description": "The name/title of the application"
+  },
+  {
+    "name": "application.version",
+    "type": "java.lang.String",
+    "description": "The version of this application"
+  },
+  {
+    "name": "application.tosUrl",
+    "type": "java.lang.String",
+    "description": "The URL of the Terms-of-Service for using this web service"
+  },
+  {
+    "name": "application.owner.name",
+    "type": "java.lang.String",
+    "description": "The name of the owner or the owning entity"
+  },
+  {
+    "name": "application.owner.email",
+    "type": "java.lang.String",
+    "description": "Email to contact the owner of the owning entity"
+  },
+  {
+    "name": "application.owner.url",
+    "type": "java.lang.String",
+    "description": "A link to the web page of the owner or the owning entity"
+  },
+  {
+    "name": "application.license.name",
+    "type": "java.lang.String",
+    "description": "The name of the license used for this web service"
+  },
+  {
+    "name": "application.license.url",
+    "type": "java.lang.String",
+    "description": "The URL to access the license of this web service"
+  },
+  {
+    "name": "application.env.dev",
+    "type": "java.lang.String",
+    "description": "The development deployment of this web service"
+  },
+  {
+    "name": "application.env.qa",
+    "type": "java.lang.String",
+    "description": "The qa deployment of this web service"
+  },
+  {
+    "name": "application.env.preProd",
+    "type": "java.lang.String",
+    "description": "The pre production deployment of this web service"
+  },
+  {
+    "name": "application.env.prod",
+    "type": "java.lang.String",
+    "description": "The production deployment of this web service"
+  },
+  {
+    "name": "application.env.local",
+    "type": "java.lang.String",
+    "description": "The localhost service for developers"
+  }
+]}

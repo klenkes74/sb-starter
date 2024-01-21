@@ -17,13 +17,37 @@
 
     <name>Spring Boot Starter</name>
     <description>
-        A small starter.
+        A small starter for spring-boot based kubernetes deployed web services.
     </description>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <!-- OpenAPI -->
+        <owner.name>Roland T. Lichti</owner.name>
+        <owner.url>https://www.lichti.de/</owner.url>
+        <owner.email>rlichti@kaiserpfalz-edv.de</owner.email>
+
+        <terms-of-service>https://www.kaiserpfalz-edv.de/</terms-of-service>
+        <license.name>GNU General Public License 3</license.name>
+        <license.url>https://www.gnu.org/licenses/gpl-3.0.de.html</license.url>
+
+
+        <base-hostname>sb-starter.apps.kaiserpfalz-edv.de</base-hostname>
+        <env.dev.hostname>dev.${base-hostname}</env.dev.hostname>        
+        <env.qa.hostname>qa.${base-hostname}</env.qa.hostname>
+        <env.pre-prod.hostname>pre-prod.${base-hostname}</env.pre-prod.hostname>
+        <env.prod.hostname>prod.${base-hostname}</env.prod.hostname>
+
+        <!-- Deployment -->
+        <container.name>sb-starter</container.name>
+        <container.tag>latest</container.tag>
+        <container.pullPolicy>Always</container.pullPolicy>
+
+        <management.port>8081</management.port>
+        <server.port>8080</server.port>
     </properties>
 
     <dependencyManagement>
@@ -138,12 +162,5 @@
                 </configuration>
             </plugin>
         </plugins>
-
-        <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-                <filtering>true</filtering>
-            </resource>
-        </resources>
     </build>
 </project>

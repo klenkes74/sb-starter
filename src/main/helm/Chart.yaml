@@ -1,0 +1,7 @@
+apiVersion: v2
+name: @project.artifactId@
+description: @project.description@
+
+type: application
+version: @project.version@
+appVersion: "v@project.version@"

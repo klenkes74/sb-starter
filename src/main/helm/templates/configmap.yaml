@@ -1,0 +1,123 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "@project.artifactId@.fullname" . }}
+  labels:
+    {{- include "@project.artifactId@.labels" . | nindent 4 }}
+immutable: true
+data:
+  application.yaml: |
+    ---
+    application:
+        name: "@project.artifactId@"
+        version: "v@project.version@"
+        tosUrl: "@terms-of-service@"
+        owner:
+            name: "@owner.name@"
+            email: "@owner.email@"
+            url: "@owner.url@"
+        license:
+            name: "@license.name@"
+            url: "@license.url@"
+        env:
+            dev: https://@env.dev.hostname@
+            qa: https://@env.qa.hostname@
+            preProd: https://@env.pre-prod.hostname@
+            prod: https://@env.prod.hostname@
+
+    info:
+      app:
+        encoding: "@project.build.sourceEncoding@"
+        java:
+          source: "@java.version@"
+          target: "@java.version@"
+
+    management:
+        server:
+            port: {{ .Values.management.port }}
+        endpoints:
+            enabled-by-default: true
+            web:
+                discovery:
+                    enabled: true
+                exposure:
+                    include: health,ping,prometheus,livenessstate,readinessstate
+                cors:
+                    allowed-origins: "http://localhost/"
+                    allowed-methods: "GET,POST"
+            jmx:
+                exposure:
+                    include: "*"
+        info:
+            git:
+                mode: "full"
+        tracing:
+            enabled: true
+            propagation:
+                consume:
+                - w3c
+                - b3
+                - b3-multi
+                produce:
+                - w3c
+            baggage:
+                enabled: true
+                correlation:
+                    enabled: true
+            brave:
+                span-joining-supported: true
+            sampling:
+                probability: 1.0
+        prometheus:
+            metrics:
+                export:
+                    enabled: true
+                    descriptions: false
+                    histogram-flavor: Prometheus
+        auditevents:
+            enabled: true
+        defaults:
+            metrics:
+                export:
+                    enabled: true
+
+    micrometer:
+        observations:
+            annotations:
+                enabled: true      
+
+    server:
+        # https://stackoverflow.com/questions/59126518/how-to-cope-with-x-forwarded-headers-in-spring-boot-2-2-0-spring-web-mvc-behin
+        forward-headers-strategy: native
+        port: {{ .Values.service.port }}
+        http2:
+            enabled: true
+        compression:
+            enabled: true
+        error:
+            whitelabel:
+                enabled: false
+        max-http-request-header-size: 16384
+        servlet:
+            session:
+                cookie:
+                    same-site: strict
+                    http-only: true
+                    secure: false
+                    path: "/"
+                    max-age: 86400
+                    name: ${application.name}
+        
+    spring:
+        application:
+            name: ${application.name}
+        main:
+            banner-mode: "off"
+            cloud-platform: kubernetes
+            log-startup-info: true
+            register-shutdown-hook: true
+            allow-circular-references: false
+            allow-bean-definition-overriding: false
+            lazy-initialization: false
+            keep-alive: true
+            web-application-type: servlet

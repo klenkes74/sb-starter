@@ -1,0 +1,113 @@
+# Default values for service.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+hostname: &hostname @env.dev.hostname@
+org: &o "Kaiserpfalz EDV-Service"
+ou: &ou "Software Entwicklung"
+email: &email "tech@kaiserpfalz-edv.de"
+locality: &locality "Bensheim"
+province: &province "Hessen"
+country: &country "DE"
+
+ingressClass: &ingressClass openshift-default
+replicaCount: &replicaCount 1
+autoScalingEnabled: &autoScalingEnabled true
+
+image:
+  repository: "@container.name@"
+  pullPolicy: "@container.pullPolicy@"
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: "@container.tag@"
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+stage:
+  dev:
+    url: "https://@env.dev.hostname@"
+  qa:
+    url: "https://@env.qa.hostname@"
+  pre-prod:
+    url: "https://@env.pre-prod.hostname@"
+  prod:
+    url: "https://@env.prod.hostname@"
+
+serviceAccount:
+  create: true
+  annotations: {}
+  name: ""
+
+podAnnotations: {}
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext:
+  capabilities:
+    drop:
+    - ALL
+  readOnlyRootFilesystem: true
+  runAsNonRoot: true
+  runAsUser: 1000
+
+service:
+  type: ClusterIP
+  port: @server.port@
+
+management:
+  type: ClusterIP
+  port: @management.port@
+
+ingress:
+  enabled: true
+  className: *ingressClass
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    kubernetes.io/tls-acme: "true"
+    cert-manager.io/common-name: *hostname
+    cert-manager.io/subject-organizations: *o
+    cert-manager.io/subject-organizationalunits: *ou
+    cert-manager.io/subject-countries: *country
+    cert-manager.io/subject-provinces: *province
+    cert-manager.io/subject-localities: *locality
+    cert-manager.io/email-sans: *email
+    cert-manager.io/duration: 2440h
+    cert-manager.io/renew-before: 2200h
+    cert-manager.io/usages: "server auth"
+    cert-manager.io/revision-history-limit: 3
+    cert-manager.io/private-key-algorithm: ECDSA
+    cert-manager.io/private-key-encoding: PKCS1
+    cert-manager.io/private-key-size: 521
+    cert-manager.io/private-key-rotation-policy: Never
+  hosts:
+    - host: *hostname
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls:
+    - secretName: "@project.artifactId@-tls"
+      hosts:
+        - *hostname
+
+resources:
+  limits:
+    cpu: 1000m
+    memory: 1Gi
+  requests:
+    cpu: 250m
+    memory: 512Mi
+
+autoscaling:
+  enabled: *autoScalingEnabled
+  minReplicas: *replicaCount
+  maxReplicas: 5
+  targetCPUUtilizationPercentage: 80
+  targetMemoryUtilizationPercentage: 80
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}

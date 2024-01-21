@@ -1,22 +1,19 @@
-# KP-LIBRARY - A library management system.
+# SB-STARTER - A template for a spring-boot application
 
 > You don't need to be crazy to be my friend ... ok, maybe you do. It's just more fun that way.
 >
 > -- @blue_eyed_darkness on TikTok
 
-![Maven](https://github.com/KaiserpfalzEDV/kp-library/workflows/CI/badge.svg)
+![Maven](https://github.com/klenkes74/sb-starter/workflows/CI/badge.svg)
 
 ## Abstract
-This is a small library management service.
+A small blueprint for a full fledged kubernetes based web service.
 
 
 ## License
 The license for the software is GPL 3.0 or newer. Parts of the software may be licensed under other licences like MIT
 or Apache 2.0 - the files are marked appropriately. 
 
-The kp-library-api and kp-library-client is also co-licensed on LGPL 3.0 or newer.
-
-Some javadoc documentation contains information from https://www.wikipedia.org(Wikipedia).
 
 ## Architecture
 
@@ -42,4 +39,4 @@ _right_. So no shortcuts to get faster. And be prepared for some basic discussio
 design :-).
 
 ---
-Bensheim, 2023-01-15
+Bensheim, 2024-01-21

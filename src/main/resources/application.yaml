@@ -2,17 +2,31 @@
 application:
     name: "@project.artifactId@"
     version: "v@project.version@"
+    tosUrl: "@terms-of-service@"
+    owner:
+        name: "@owner.name@"
+        email: "@owner.email@"
+        url: "@owner.url@"
+    license:
+        name: "@license.name@"
+        url: "@license.url@"
+    env:
+        local: "http://localhost:8080"
+        dev: "https://@env.dev.hostname@"
+        qa: "https://@env.qa.hostname@"
+        preProd: "https://@env.pre-prod.hostname@"
+        prod: "https://@env.prod.hostname@"
 
 info:
-  app:
+    app:
     encoding: "@project.build.sourceEncoding@"
     java:
-      source: "@java.version@"
-      target: "@java.version@"
+        source: "@java.version@"
+        target: "@java.version@"
 
 management:
     server:
-        port: 8081
+        port: @server.port@
     endpoints:
         enabled-by-default: true
         web:
@@ -67,7 +81,7 @@ micrometer:
 server:
     # https://stackoverflow.com/questions/59126518/how-to-cope-with-x-forwarded-headers-in-spring-boot-2-2-0-spring-web-mvc-behin
     forward-headers-strategy: native
-    port: 8080
+    port: @management.port@
     http2:
         enabled: true
     compression:
@@ -99,4 +113,3 @@ spring:
         lazy-initialization: false
         keep-alive: true
         web-application-type: servlet
-    
