@@ -1,14 +1,14 @@
 ---
 application:
-    name: spring-boot-starter
-    version: ${project.version}
+    name: "@project.artifactId@"
+    version: "v@project.version@"
 
 info:
   app:
-    encoding: "${project.build.sourceEncoding}"
+    encoding: "@project.build.sourceEncoding@"
     java:
-      source: "${java.version}"
-      target: "${java.version}"
+      source: "@java.version@"
+      target: "@java.version@"
 
 management:
     server:
@@ -29,3 +29,78 @@ management:
     info:
         git:
             mode: "full"
+    tracing:
+        enabled: true
+        propagation:
+            consume:
+            - w3c
+            - b3
+            - b3-multi
+            produce:
+            - w3c
+        baggage:
+            enabled: true
+            correlation:
+                enabled: true
+        brave:
+            span-joining-supported: true
+        sampling:
+            probability: 1.0
+    prometheus:
+        metrics:
+            export:
+                enabled: true
+                descriptions: false
+                histogram-flavor: Prometheus
+    auditevents:
+        enabled: true
+    defaults:
+        metrics:
+            export:
+                enabled: true
+
+micrometer:
+    observations:
+        annotations:
+            enabled: true      
+
+server:
+    port: 8080
+    compression:
+        enabled: true
+    error:
+        whitelabel:
+            enabled: false
+    forward-headers-strategy: framework
+    http2:
+        enabled: true
+    max-http-request-header-size: 16384
+    servlet:
+        session:
+            cookie:
+                same-site: strict
+                http-only: true
+                secure: false
+                path: "/"
+                max-age: 86400
+                name: ${application.name}
+    
+
+logging:
+    pattern:
+        level: '%5p [${application.name},%X{traceId:-},%X{spanId:-}]'
+
+spring:
+    application:
+        name: ${application.name}
+    main:
+        banner-mode: "off"
+        cloud-platform: kubernetes
+        log-startup-info: true
+        register-shutdown-hook: true
+        allow-circular-references: false
+        allow-bean-definition-overriding: false
+        lazy-initialization: false
+        keep-alive: true
+        web-application-type: servlet
+    

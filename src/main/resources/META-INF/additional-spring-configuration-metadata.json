@@ -1,0 +1,12 @@
+{"properties": [
+  {
+    "name": "application.name",
+    "type": "java.lang.String",
+    "description": "The name of the application (should follow rfc822 - only letters, digits and dashes)."
+  },
+  {
+    "name": "application.version",
+    "type": "java.lang.String",
+    "description": "The version of the application (should follow https://semver.org/ and start with a 'v' to mark it as string)"
+  }
+]}
