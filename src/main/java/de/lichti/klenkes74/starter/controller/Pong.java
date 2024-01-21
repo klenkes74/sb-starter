@@ -17,13 +17,22 @@
  */
 package de.lichti.klenkes74.starter.controller;
 
+import java.util.Map;
+
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.core.MediaType;
 import lombok.EqualsAndHashCode;
+import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.RequestMapping;
+
 
 
 
@@ -34,13 +43,29 @@ import lombok.extern.slf4j.Slf4j;
  * @since 2024-01-20
  */
 @RestController
+@RequestMapping(value = "/api", produces = MediaType.TEXT_PLAIN)
 @ToString(onlyExplicitlyIncluded = true, includeFieldNames = true)
+@RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Slf4j
 public class Pong {
-    @GetMapping("/api/ping")
-    public String ping(@RequestParam(name = "nonce", defaultValue="pong") final String nonce) {
+    @GetMapping("ping")
+    public String ping(
+        @RequestHeader(name = "X-Forwarded-Host", defaultValue = "none") String originalHost,
+        @RequestHeader(name = "X-Forwarded-Proto", defaultValue = "http") String proto,
+        @RequestParam(name = "nonce", defaultValue="pong") final String nonce
+    ) {
+        log.info("Server pinged. client='{}', protocol='{}', nonce='{}'", originalHost, proto, nonce);
+
         return nonce;
     }
     
+    @GetMapping("ping/{nonce}")
+    public String pingPath(
+        @RequestHeader(name = "X-Forwarded-Host", defaultValue = "none") String originalHost,
+        @RequestHeader(name = "X-Forwarded-Proto", defaultValue = "http") String proto,
+        @PathVariable(name = "nonce", required = false) final String nonce
+    ) {
+        return ping(originalHost, proto, nonce != null ? nonce : "pong");
+    }
 }
