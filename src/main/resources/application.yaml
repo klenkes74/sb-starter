@@ -65,15 +65,16 @@ micrometer:
             enabled: true      
 
 server:
+    # https://stackoverflow.com/questions/59126518/how-to-cope-with-x-forwarded-headers-in-spring-boot-2-2-0-spring-web-mvc-behin
+    forward-headers-strategy: native
     port: 8080
+    http2:
+        enabled: true
     compression:
         enabled: true
     error:
         whitelabel:
             enabled: false
-    forward-headers-strategy: framework
-    http2:
-        enabled: true
     max-http-request-header-size: 16384
     servlet:
         session:
@@ -85,11 +86,6 @@ server:
                 max-age: 86400
                 name: ${application.name}
     
-
-logging:
-    pattern:
-        level: '%5p [${application.name},%X{traceId:-},%X{spanId:-}]'
-
 spring:
     application:
         name: ${application.name}
