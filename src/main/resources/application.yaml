@@ -1,6 +1,7 @@
 ---
 application:
     name: "@project.artifactId@"
+    description: "@project.description@"
     version: "v@project.version@"
     tosUrl: "@terms-of-service@"
     owner:
@@ -19,14 +20,14 @@ application:
 
 info:
     app:
-        encoding: "${project.build.sourceEncoding}"
+        encoding: "@project.build.sourceEncoding@"
         java:
-            source: "${java.version}"
-            target: "${java.version}"
+            source: "@java.version@"
+            target: "@java.version@"
 
 management:
     server:
-        port: @server.port@
+        port: @management.port@
     endpoints:
         enabled-by-default: true
         web:
@@ -104,7 +105,7 @@ micrometer:
 server:
     # https://stackoverflow.com/questions/59126518/how-to-cope-with-x-forwarded-headers-in-spring-boot-2-2-0-spring-web-mvc-behin
     forward-headers-strategy: native
-    port: @management.port@
+    port: @server.port@
     http2:
         enabled: true
     compression:
@@ -121,18 +122,16 @@ server:
                 secure: false
                 path: "/"
                 max-age: 86400
-                name: ${application.name}
+                name: "@application.artifactId@"
     
 spring:
     application:
-        name: ${application.name}
+        name: "@project.artifactId@"
     main:
         banner-mode: "off"
         cloud-platform: kubernetes
-        log-startup-info: true
-        register-shutdown-hook: true
-        allow-circular-references: false
-        allow-bean-definition-overriding: false
-        lazy-initialization: false
-        keep-alive: true
-        web-application-type: servlet
+
+logging:
+    pattern:
+        console: "%clr(%d{ISO8601}){faint} %clr(%-5level) %clr(${PID:-}){magenta} %clr(%32X{traceId:-}) %clr(%16X{spanId:-}) %clr(%X{host}){magenta} %clr([%-15.15t]){faint} %clr(---){faint} %clr(%-39.39logger){cyan} %clr(:){faint} %m%n%wEx"
+        file: "%d{ISO8601} %-5level %32X{traceId}-%16X{spanId} %X{host:-} %-15.15t %-39.39logger -- %m%n%wEx"

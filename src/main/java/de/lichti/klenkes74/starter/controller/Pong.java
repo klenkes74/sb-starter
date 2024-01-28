@@ -19,13 +19,14 @@ package de.lichti.klenkes74.starter.controller;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.micrometer.core.annotation.Counted;
 import io.micrometer.core.annotation.Timed;
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
 import jakarta.ws.rs.core.MediaType;
 import lombok.EqualsAndHashCode;
 import lombok.RequiredArgsConstructor;
@@ -46,8 +47,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Slf4j
-public class Pong {
-    @GetMapping("ping")
+public class Pong implements AutoCloseable {
     @Counted(
         value = "ping.count",
         description = "The number of calls for a pong."
@@ -57,17 +57,15 @@ public class Pong {
         description = "The times for getting a pong from a ping.", 
         percentiles = { 0.99d, 0.95d, 0.9d, 0.75d, 0.5d, 0.25d, 0.05d }
     )
-    public String ping(
-        @RequestHeader(name = "X-Forwarded-Host", defaultValue = "none") final String originalHost,
-        @RequestHeader(name = "X-Forwarded-Proto", defaultValue = "http") final String proto,
+    @GetMapping("ping")
+    public String pingGet(
         @RequestParam(name = "nonce", defaultValue="pong") final String nonce
     ) {
-        log.info("Server pinged. client='{}', protocol='{}', nonce='{}'", originalHost, proto, nonce);
+        log.info("Server pinged. nonce='{}'", nonce);
 
         return nonce;
     }
     
-    @GetMapping("ping/{nonce}")
     @Counted(
         value = "ping.count",
         description = "The number of calls for a pong."
@@ -77,12 +75,36 @@ public class Pong {
         description = "The times for getting a pong from a ping.", 
         percentiles = { 0.99d, 0.95d, 0.9d, 0.75d, 0.5d, 0.25d, 0.05d }
     )
+    @GetMapping("ping/{nonce}")
     public String pingPath(
-        @RequestHeader(name = "X-Forwarded-Host", defaultValue = "none") final String originalHost,
-        @RequestHeader(name = "X-Forwarded-Proto", defaultValue = "http") final String proto,
         @PathVariable(name = "nonce", required = false) final String nonce
     ) {
-        return this.ping(originalHost, proto, nonce != null ? nonce : "pong");
+        return this.pingGet(nonce != null ? nonce : "pong");
     }
     
+        
+    @Counted(
+        value = "ping.count",
+        description = "The number of calls for a pong."
+    )
+    @Timed(
+        value =" ping.time", 
+        description = "The times for getting a pong from a ping.", 
+        percentiles = { 0.99d, 0.95d, 0.9d, 0.75d, 0.5d, 0.25d, 0.05d }
+    )
+    @GetMapping("ping/")
+    public String pingPath() {
+        return this.pingGet("pong");
+    }
+
+    @PostConstruct
+    public void init() {
+        log.info("Controller loaded: controller={}", this);
+    }
+
+    @Override
+    @PreDestroy
+    public void close() {
+        log.info("Controller unloading: controller={}", this);
+    }
 }
