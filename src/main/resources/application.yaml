@@ -133,5 +133,5 @@ spring:
 
 logging:
     pattern:
-        console: "%clr(%d{ISO8601}){faint} %clr(%-5level) %clr(${PID:-}){magenta} %clr(%32X{traceId:-}) %clr(%16X{spanId:-}) %clr(%X{host}){magenta} %clr([%-15.15t]){faint} %clr(---){faint} %clr(%-39.39logger){cyan} %clr(:){faint} %m%n%wEx"
+        console: "%clr(%d{ISO8601}){faint} %clr(%-5level) %clr(${PID:-}){magenta} %clr(%32X{traceId:-}) %clr(%16X{spanId:-}) %clr(%-39X{host}){magenta} %clr([%-15.15t]){faint} %clr(---){faint} %clr(%-39.39logger){cyan} %clr(:){faint} %m%n%wEx"
         file: "%d{ISO8601} %-5level %32X{traceId}-%16X{spanId} %X{host:-} %-15.15t %-39.39logger -- %m%n%wEx"
