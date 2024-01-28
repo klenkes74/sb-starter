@@ -19,10 +19,10 @@ application:
 
 info:
     app:
-    encoding: "@project.build.sourceEncoding@"
-    java:
-        source: "@java.version@"
-        target: "@java.version@"
+        encoding: "${project.build.sourceEncoding}"
+        java:
+            source: "${java.version}"
+            target: "${java.version}"
 
 management:
     server:
@@ -33,13 +33,36 @@ management:
             discovery:
                 enabled: true
             exposure:
-                include: health,ping,prometheus,livenessstate,readinessstate
+                include: health,ping,prometheus,livenessstate,readinessstate,db,mongo,mail,ping,diskspace
             cors:
                 allowed-origins: "http://localhost/"
                 allowed-methods: "GET,POST"
         jmx:
             exposure:
                 include: "*"
+    endpoint:
+        health:
+            probes:
+                enabled: true
+    health:
+        defaults:
+            enabled: true
+        livenessState:
+            enabled: true
+        readinessState:
+            enabled: true
+        db:
+            enabled: true
+        mail:
+            enabled: true
+        ping:
+            enabled: true
+        diskspace:
+            enabled: true
+            path: /tmp
+            threshold: 500MB
+        mongo:
+            enabled: true
     info:
         git:
             mode: "full"

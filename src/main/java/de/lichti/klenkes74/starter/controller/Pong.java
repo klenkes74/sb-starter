@@ -24,12 +24,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.micrometer.core.annotation.Counted;
+import io.micrometer.core.annotation.Timed;
 import jakarta.ws.rs.core.MediaType;
 import lombok.EqualsAndHashCode;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
-
 
 
 
@@ -47,9 +48,18 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class Pong {
     @GetMapping("ping")
+    @Counted(
+        value = "ping.count",
+        description = "The number of calls for a pong."
+    )
+    @Timed(
+        value =" ping.time", 
+        description = "The times for getting a pong from a ping.", 
+        percentiles = { 0.99d, 0.95d, 0.9d, 0.75d, 0.5d, 0.25d, 0.05d }
+    )
     public String ping(
-        @RequestHeader(name = "X-Forwarded-Host", defaultValue = "none") String originalHost,
-        @RequestHeader(name = "X-Forwarded-Proto", defaultValue = "http") String proto,
+        @RequestHeader(name = "X-Forwarded-Host", defaultValue = "none") final String originalHost,
+        @RequestHeader(name = "X-Forwarded-Proto", defaultValue = "http") final String proto,
         @RequestParam(name = "nonce", defaultValue="pong") final String nonce
     ) {
         log.info("Server pinged. client='{}', protocol='{}', nonce='{}'", originalHost, proto, nonce);
@@ -58,11 +68,21 @@ public class Pong {
     }
     
     @GetMapping("ping/{nonce}")
+    @Counted(
+        value = "ping.count",
+        description = "The number of calls for a pong."
+    )
+    @Timed(
+        value =" ping.time", 
+        description = "The times for getting a pong from a ping.", 
+        percentiles = { 0.99d, 0.95d, 0.9d, 0.75d, 0.5d, 0.25d, 0.05d }
+    )
     public String pingPath(
-        @RequestHeader(name = "X-Forwarded-Host", defaultValue = "none") String originalHost,
-        @RequestHeader(name = "X-Forwarded-Proto", defaultValue = "http") String proto,
+        @RequestHeader(name = "X-Forwarded-Host", defaultValue = "none") final String originalHost,
+        @RequestHeader(name = "X-Forwarded-Proto", defaultValue = "http") final String proto,
         @PathVariable(name = "nonce", required = false) final String nonce
     ) {
-        return ping(originalHost, proto, nonce != null ? nonce : "pong");
+        return this.ping(originalHost, proto, nonce != null ? nonce : "pong");
     }
+    
 }

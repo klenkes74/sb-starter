@@ -21,6 +21,13 @@ package de.lichti.klenkes74.starter;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
+
+import io.micrometer.core.annotation.Counted;
+import io.micrometer.core.annotation.Timed;
+import io.micrometer.core.aop.CountedAspect;
+import io.micrometer.core.aop.TimedAspect;
+import io.micrometer.core.instrument.MeterRegistry;
 
 
 /**
@@ -33,5 +40,25 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class Main {
     public static void main(final String[] args) {
         SpringApplication.run(Main.class, args);
+    }
+
+    /**
+     * Allowing micrometer to take time of methods.
+     * @param registry the registry to register this aspect to.
+     * @return The aspect for {@link Timed} annotations.
+     */
+    @Bean
+    public TimedAspect timedAspect(final MeterRegistry registry) {
+        return new TimedAspect(registry);
+    }
+
+    /**
+     * Allowing micrometer to count calls.
+     * @param registry the registry to register this aspect to.
+     * @return The aspekt for {@link Counted} annotations.
+     */
+    @Bean
+    public CountedAspect countedAspect(final MeterRegistry registry) {
+        return new CountedAspect(registry);
     }
 }
